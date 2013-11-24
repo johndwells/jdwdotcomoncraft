@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html class="{% if htmlClass is defined %}{{ htmlClass }}{% endif %} loading" dir="ltr" lang="en-GB">
+<head>
+	<meta charset="utf-8" />
+
+	{% block headMeta %}
+	{% endblock %}
+	
+	<title>{% if metaTitle is defined %}{{ metaTitle | e }} - {% endif %}{{ siteName }}</title>
+
+	<link rel="shortcut icon" href="/favicon.ico" />
+
+	<!--[if ! lte IE 6]><!-->
+		<link type="text/css" rel="stylesheet" href="/style/scripts/sh2/styles/shCore.css" />
+		<link type="text/css" rel="stylesheet" href="/style/scripts/sh2/styles/shThemeFadeToGrey.css" />
+		<link type="text/css" rel="stylesheet" href="/style/scripts/sh2/styles/shEE.css" />
+		<link type="text/css" rel="stylesheet" href="/style/css/tipsy.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/style/css/screen.css" media="screen" />
+	<!--<![endif]-->
+
+	<link rel="alternate" type="application/rss+xml" title="RSS" href="{path='blog/rss'}" />
+
+	<!--[if gte IE 7]>  
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->  
+
+</head>
+<body>
+	
+	<div id="topbar">
+	
+		<div id="aboutbox">
+			<h1>{{ siteName }}</h1>
+			
+			<div class="avatar">
+
+				{% if siteWide.avatar | length %}
+					{% set avatar = siteWide.avatar.first() %}
+					<a href="{{ siteUrl }}" class="hijackme" rel="" title="Return home"><img src="{{ avatar.getUrl('avatar') }}" width="{{ avatar.getWidth('avatar') }}" height="{{ avatar.getHeight('avatar') }}" /></a>
+				{% endif %}
+
+			</div> <!-- /.avatar -->
+			
+			<div class="description">
+
+				{{ siteWide.whoAmI }}
+
+			</div> <!-- /.description -->
+		</div> <!-- /#aboutbox -->
+	
+		<div id="navbar">
+			<ul id="nav_primary">
+				<li class="blog"><a href="{{ siteUrl }}" rel="blog" class="{% if navBlog is defined %}active{% endif %}" title="Blog">blog</a></li>
+				<li class="software"><a href="{{ url('software') }}" rel="software" class="hijackme {% if navSoftware is defined %}active{% endif %}" title="Software">software</a></li>
+			</ul>
+	
+			<ul id="nav_social">
+				<li><a href="http://www.linkedin.com/in/johndwells" title="LinkedIn"><img src="/style/images/icon_linkedin.png" alt="" width="32" height="32" /></a></li>
+				<li><a href="http://twitter.com/johndwells" title="Twitter"><img src="/style/images/icon_twitter.png" alt="" width="32" height="32" /></a></li>
+				<li><a href="{{ siteUrl('blog/feed.rss') }}" title="RSS"><img src="/style/images/icon_rss.png" alt="" width="32" height="32" /></a></li>
+				<li><a href="/style/johndwells.vcf" title="vCard"><img src="/style/images/icon_email.png" alt="" width="32" height="32" /></a></li>
+			</ul>
+			
+			<span class="toggle">&copy; johndwells<span></span></span>
+		</div> <!-- /#navbar -->
+	
+	</div> <!-- /#topbar -->
+	
+	<div id="topbar_dummy">
+		<div class="dummy_nav_toggle">
+			<a href="#aboutbox" class="toggle">&copy; johndwells<span></span></a>
+		</div>
+	</div> <!-- /#topbar_dummy -->
+	
+	<div id="wrapper">
+	
+		{% block content %}
+			<p>If you can read this, then something may have gone wrong.</p>
+		{% endblock %}
+
+	</div> <!-- /#wrapper -->
+
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script type="text/javascript" src="/style/scripts/jquery.tipsy.js"></script>
+	<script type="text/javascript" src="/style/scripts/jquery.easytabs.min.js"></script>
+	<script type="text/javascript" src="/style/scripts/sh2/scripts/shCore.js"></script>
+	<script type="text/javascript" src="/style/scripts/sh2/scripts/shBrushJScript.js"></script>
+	<script type="text/javascript" src="/style/scripts/sh2/scripts/shBrushPhp.js"></script>
+	<script type="text/javascript" src="/style/scripts/sh2/scripts/shBrushEE.js"></script>
+	<script type="text/javascript" src="/style/scripts/startup.js"></script>
+
+	{% if not user %}
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-1352094-1']);
+			_gaq.push(['_trackPageview']);
+		</script>
+	{% endif %}
+
+	<script type="text/javascript">
+
+		/*
+		 * Disqus Integration
+		 */
+        var disqus_shortname = 'johndwells-com'; // required: replace example with your forum shortname
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+
+		/*
+		 * Updated to use the function-based method described in http://www.phpied.com/social-button-bffs/
+		 * Better handling of scripts without supplied ids.
+		 *
+		 * N.B. Be sure to include Google Analytics's _gaq and Facebook's fbAsyncInit prior to this function.
+		 */
+
+		(function(doc, script) {
+		    var js, 
+		        fjs = doc.getElementsByTagName(script)[0],
+		        add = function(url, id) {
+		            if (doc.getElementById(id)) {return;}
+		            js = doc.createElement(script);
+		            js.src = url;
+		            id && (js.id = id);
+		            fjs.parentNode.insertBefore(js, fjs);
+		        };
+
+		    // Google Analytics
+		    add(('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js', 'ga');
+		    // Google+ button
+		    //add('https://apis.google.com/js/plusone.js');
+		    // Facebook SDK
+		    //add('//connect.facebook.net/en_US/all.js', 'facebook-jssdk');
+		    // Twitter SDK
+		    add('//platform.twitter.com/widgets.js', 'twitter-wjs');
+		}(document, 'script'));
+	</script>
+	
+</body>
+</html>
+
+<!-- {elapsed_time} -->

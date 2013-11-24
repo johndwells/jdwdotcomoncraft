@@ -1,0 +1,75 @@
+{#
+ # Blog Archives template
+ # ---------------
+ #
+ #}
+
+{% extends "_layout" %}
+
+
+{#
+ # Set our navigation 'active' state
+ #}
+{% set navBlog = true %}
+
+
+{#
+ # Set our page title to include the entry's title
+ #}
+{% set metaTitle = entry.title %}
+
+
+{#
+ # Set our html class
+ #}
+{% set htmlClass = 'blog' %}
+
+
+{#
+ # Re-use our 'meta' information about each post.
+ #}
+{% import "blog/_meta" as blogMeta %}
+
+
+{#
+ # Create our "content" block
+ #}
+{% block content %}
+	<div id="content" class="blog archives">
+	
+		<h1>{{ entry.title }}</h1>
+		
+		<div id="sidebar">
+		
+			{{ entry.greeting }}
+
+		</div> <!-- /#sidebar -->
+
+		<div id="archives">
+
+			{% set entries = craft.entries.section('blog').limit(10) %}
+
+			{% for blogEntry in entries %}
+
+				<div class="post">
+					<h2><a href="{{ blogEntry.getUrl() }}" rel="blog/{{ blogEntry.slug }}" title="{{ blogEntry.title | e}}">{% if blogEntry.displayTitle %}{{ blogEntry.displayTitle }}{% else %}{{ blogEntry.title }}{% endif %}</a></h2>
+
+					<div class="meta">
+
+						{{ blogMeta.make(blogEntry) }}
+
+					</div> <!-- /.meta -->
+
+					<div class="summary">
+						{{ blogEntry.summary | raw }}
+					</div> <!-- /.summary -->
+					
+					<a href="{{ blogEntry.getUrl() }}" rel="blog/{{ blogEntry.slug }}" title="{{ blogEntry.title | e}}">Continue reading...</a>
+				</div> <!-- /.post -->
+				
+			{% endfor %}
+		</div> <!-- /#archives-->
+
+	</div> <!-- /#content -->
+	
+{% endblock %}

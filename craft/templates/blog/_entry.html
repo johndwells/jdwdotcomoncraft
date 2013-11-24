@@ -1,0 +1,161 @@
+{#
+ # Single Blog Entry template
+ # ---------------
+ #
+ # This is also shared by our "home" template. Hence we first start
+ # by checking if our entry has been defined, and if not, get it.
+ #}
+
+{% extends "_layout" %}
+
+
+{#
+ # Set our navigation 'active' state
+ #}
+{% set navBlog = true %}
+
+
+{#
+ # Set our html class
+ #}
+{% set htmlClass = 'blog' %}
+
+
+{#
+ # Define our search parameters for fetching the
+ # current, next & previous entries
+ #}
+{% set pageParams = {
+	order : 'postDate'
+} %}
+
+
+{#
+ # If an entry hasn't been defined automatically, let's fetch the most recent.
+ #}
+{% if entry is not defined %}
+	{% set entry = craft.entries(pageParams).section('blog').limit(1).first() %}
+{% endif %}
+
+
+{#
+ # Sanity check!
+ #}
+{% if entry %}
+
+
+	{#
+	 # The 'meta' information about the post is displayed twice,
+	 # so let's use a macro so we don't have to repeat ourselves.
+	 #}
+	{% import "blog/_meta" as blogMeta %}
+
+
+	{#
+	 # Set our navigation 'active' state
+	 #}
+	{% set navBlog = true %}
+
+
+	{#
+	 # Set our page title to include the entry's title
+	 #}
+	{% set metaTitle = entry.title %}
+
+
+	{#
+	 # Create our "content" block
+	 #}
+	{% block content %}
+
+		<div id="content" class="blog single">
+		
+			<h1>{{ entry.title }}</h1>
+			
+			<div id="sidebar">
+
+				{% set prevEntry = entry.getPrev(pageParams) %}
+				{% set nextEntry = entry.getNext(pageParams) %}
+
+				<div id="paginate">
+
+					{% if nextEntry %}
+						<a href="{{ nextEntry.getUrl() }}" class="prev" rel="blog/{{ nextEntry.slug }}" title="{{ nextEntry.title | e }}">&larr; Previous</a>
+					{% endif %}
+
+					{% if prevEntry %}
+						<a href="{{ prevEntry.getUrl() }}" class="next" rel="blog/{{ prevEntry.slug }}" title="{{ prevEntry.title | e }}">&rarr; Next</a>
+					{% endif %}
+
+				</div> <!-- /idpaginate -->
+
+				<a href="{{ url('blog/archives')}}" class="view_all" rel="blog/archives" title="Browse the archives">Browse the archives</a>
+
+			</div> <!-- /#sidebar -->
+
+			<div class="post">
+	
+				<div class="summary">{{ entry.summary | raw }}</div>
+
+				<div class="meta">
+
+					{{ blogMeta.make(entry) }}
+
+				</div> <!-- /.meta -->
+
+				<div class="body">
+
+					{% for contentBlock in entry.body %}
+
+						{% switch contentBlock.type %}
+
+							{% case 'bodyText' %}
+
+								{{ contentBlock.text }}
+
+							{% case 'paragraphAside' %}
+
+								<div class="aside">{{ contentBlock.paragraph }}</div>
+
+							{% case 'codeExample' %}
+
+								<pre class="{% if contentBlock.language %}brush:{{ contentBlock.language }}{% endif %}">{{ contentBlock.snippet | raw }}</pre>
+
+						{% endswitch %}
+
+					{% endfor %}
+
+				</div> <!-- /.body -->
+
+				<div class="meta bottom">
+
+					{{ blogMeta.make(entry) }}
+
+				</div> <!-- /.meta -->
+
+			</div> <!-- /.post -->
+
+			{% if entry.postDate > siteWide.disqusInstallDate %}
+
+				<div id="comments" class="comments">
+					<a id="c">&nbsp;</a>
+					<h2>Have your say...</h2>
+
+				    <div id="disqus_thread"></div>
+				    <script type="text/javascript">
+				        var disqus_identifier = '{embed:return}';
+				        var disqus_title = '{embed:title} - JohnDWells.com';
+				        var disqus_url = '{embed:return}';
+				    </script>
+				    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+				    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+				    
+				</div> <!-- /#comments -->
+
+			{% endif %}
+		
+		</div> <!-- /#content -->
+
+	{% endblock %}
+
+{%endif %}

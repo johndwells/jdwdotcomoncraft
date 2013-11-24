@@ -1,0 +1,12 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Wells;John;D;;
+FN:John D Wells
+EMAIL;type=INTERNET;type=WORK;type=pref:hello@johndwells.com
+item1.ADR;type=WORK;type=pref:;;1C Darnley Road;Hackney;London;E9 6QH;United Kingdom
+item1.X-ABADR:gb
+item2.URL;type=pref:http\://johndwells.com
+item2.X-ABLabel:_$!<HomePage>!$_
+X-MSN;type=WORK;type=pref:johndwells@gmail.com
+X-ABUID:45292CA9-9E50-480D-BAD0-6584F56FC498\:ABPerson
+END:VCARD

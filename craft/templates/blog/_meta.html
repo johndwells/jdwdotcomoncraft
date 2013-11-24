@@ -1,0 +1,36 @@
+{% macro make(entry) %}
+	<dl class="date">
+		<dt>Published:</dt>
+		<dd>{{ entry.postDate | date("M d, Y") }}</dd>
+	</dl> <!-- /.date -->
+
+	{% if entry.categories | length %}
+		<dl class="categories">
+			<dt>Filed under:</dt>
+			<dd>
+
+				{% for category in entry.categories %}
+					<a href="{{ url('blog/archives') }}/{{ category.name | url_encode }}" rel="blog/archives/C{{ category.id }}">{{ category.name }}</a>
+					{% if not loop.last %},{% endif %}
+				{% endfor %}
+
+			</dd>
+		</dl> <!-- /.categories -->
+	{% endif %}
+
+	{% if entry.postDate > siteWide.disqusInstallDate %}
+		<dl class="comments">
+
+			<dt>Comments:</dt>
+
+			<dd><a href="#disqus_thread" data-disqus-identifier="{{ entry.getUrl() }}">add yours</a></dd>
+
+		</dl> <!-- /.comments -->
+	{% endif %}
+
+	<dl class="share">
+		<dt>Share:</dt>
+		<dd><a href="{{ entry.getUrl() }}" class="permalink" title="Permalink to {% if entry.displayTitle %}{{ entry.displayTitle | e }}{% else %}{{ entry.title | e }}{% endif %}">Permalink</a></dd>
+		<dd><a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-url="{{ entry.getUrl() }}" data-text="{% if entry.displayTitle %}{{ entry.displayTitle | e }}{% else %}{{ entry.title | e }}{% endif %}" data-count="horizontal">Tweet</a></dd>
+	</dl> <!-- /.share -->
+{% endmacro %}
